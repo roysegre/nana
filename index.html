@@ -14,31 +14,23 @@
             --background-overlay-color: rgba(0, 0, 0, 0.6);
         }
 
-        html, body {
-            height: 100%;
-            width: 100%;
-            margin: 0;
-            padding: 0;
-            /* Changed overflow to allow vertical scroll if content is too tall */
-            overflow-x: hidden; /* Prevent horizontal scroll */
-            overflow-y: auto;   /* Allow vertical scroll */
-        }
-
         body {
+            margin: 0;
             font-family: 'Rubik', sans-serif;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
+            flex-direction: column; /* Changed to column for bottom message */
+            justify-content: center; /* Adjusted for column layout */
             align-items: center;
             min-height: 100vh;
             color: var(--text-color);
+            overflow: hidden; /* Prevent scroll for animations */
+            position: relative;
             background: url('images/earth_from_space.jpg') no-repeat center center fixed;
             background-size: cover;
-            position: relative;
         }
 
         .background-overlay {
-            position: fixed; /* Changed to fixed to cover entire viewport consistently */
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
@@ -52,51 +44,31 @@
             z-index: 2;
             text-align: center;
             padding: 20px;
-            max-width: 90%;
+            max-width: 90%; /* Adjusted for mobile */
             box-sizing: border-box;
-            display: flex; /* Ensure it's a flex container from the start */
+            display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center; /* Center content vertically initially */
-            flex-grow: 1;
-            width: 100%;
-            transition: opacity 0.5s ease-in-out; /* For fading out */
-            min-height: 50vh; /* Ensure it takes up enough space */
+            flex-grow: 1; /* Allow container to take available space */
+            justify-content: center; /* Vertically center content within container */
+            width: 100%; /* Ensure it takes full width for centering */
         }
 
-        /* Styles for the new image-based header */
-        #headerImage {
-            max-width: 100%; /* Ensure it fits within the container */
-            height: auto; /* Maintain aspect ratio */
-            margin-bottom: 20px;
-            border-radius: 10px; /* Optional: slight rounded corners */
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5); /* Soft glow */
-        }
-        
-        /* Adjust for smaller screens specifically for the image */
-        @media (max-width: 480px) {
-            #headerImage {
-                width: 95%; /* Make it a bit wider on small phones */
-                height: auto;
-            }
-        }
-
-
-        h1 { /* This h1 will be replaced by image, but keeping style for other h1s if any */
-            font-size: 1.8em;
+        h1 {
+            font-size: 1.8em; /* Adjusted for mobile */
             font-weight: 700;
             margin-bottom: 20px;
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
         }
 
         p {
-            font-size: 1em;
+            font-size: 1em; /* Adjusted for mobile */
             margin-bottom: 25px;
         }
 
         input[type="text"] {
             width: 100%;
-            max-width: 300px;
+            max-width: 300px; /* Limit max width for input */
             padding: 15px;
             font-size: 1.1em;
             border: 2px solid var(--text-color);
@@ -111,11 +83,11 @@
         }
 
         input[type="text"]:focus {
-            border-color: #6a0dad;
+            border-color: #6a0dad; /* Royal Purple on focus */
         }
 
         button {
-            background-color: #6a0dad;
+            background-color: #6a0dad; /* Royal Purple */
             color: var(--text-color);
             padding: 15px 30px;
             font-size: 1.2em;
@@ -126,12 +98,12 @@
             transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
             box-shadow: 0 4px 15px rgba(106, 13, 173, 0.4);
             width: 100%;
-            max-width: 300px;
-            margin-bottom: 30px;
+            max-width: 300px; /* Limit max width for button */
+            margin-bottom: 30px; /* Space for message below */
         }
 
         button:hover {
-            background-color: #8c00b3;
+            background-color: #8c00b3; /* Lighter Purple */
             transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(106, 13, 173, 0.6);
         }
@@ -140,23 +112,25 @@
             transform: translateY(1px);
         }
 
+        /* Result Message - position adjusted to bottom */
         .result-message {
-            position: relative;
-            margin-top: 20px;
-            font-size: 1.8em;
+            position: relative; /* Changed to relative for flow below button */
+            margin-top: 20px; /* Space below button/lock */
+            font-size: 1.8em; /* Adjusted for bottom placement */
             font-weight: 700;
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
-            display: none;
-            color: var(--text-color);
+            display: none; /* Hidden by default */
+            color: var(--text-color); /* Always white for success, red for error */
             z-index: 10;
         }
 
         .result-message.error {
-            color: var(--danger-color);
+            color: var(--danger-color); /* Specific color for error */
         }
         .result-message.success {
-            color: var(--primary-color);
+             color: var(--primary-color); /* Specific color for success */
         }
+
 
         /* Animations */
         @keyframes shake {
@@ -175,6 +149,7 @@
             perspective: 1000px;
         }
 
+        /* Star Burst / Glitter Effect */
         .star-burst-container {
             position: fixed;
             top: 0;
@@ -188,8 +163,8 @@
 
         .star-particle {
             position: absolute;
-            background-color: #FFF;
-            border-radius: 50%;
+            background-color: #FFF; /* White stars */
+            border-radius: 50%; /* Circle shape for glitter effect */
             opacity: 0;
             animation: star-sparkle 1.5s forwards;
         }
@@ -205,81 +180,12 @@
             }
             100% {
                 opacity: 0;
-                transform: translate(-50%, -50%) scale(0.5);
+                transform: translate(-50%, -50%) scale(0.5); /* Fades out smaller */
             }
         }
 
-        /* Success Content Styles */
-        #successContent {
-            display: none; /* Hidden by default */
-            position: relative;
-            z-index: 2;
-            text-align: center;
-            color: var(--text-color);
-            font-size: 1.5em;
-            font-weight: 700;
-            line-height: 1.6;
-            padding: 20px;
-            box-sizing: border-box;
-            max-width: 90%;
-            width: 100%;
-            flex-direction: column;
-            justify-content: flex-start; /* Align success content to top */
-            align-items: center;
-            flex-grow: 1;
-            min-height: 80vh; /* Adjust for better phone display */
-            opacity: 0; /* Start hidden for fade-in */
-            transition: opacity 0.5s ease-in-out;
-            overflow-y: auto; /* Enable scrolling for success content if it overflows */
-            -webkit-overflow-scrolling: touch;
-        }
-        #successContent h3 {
-            margin-top: 0;
-            margin-bottom: 30px;
-            font-size: 2em; /* Bigger success message */
-        }
-
-        .color-info-row {
-            display: flex;
-            align-items: center;
-            justify-content: center; /* Center rows horizontally */
-            margin-bottom: 15px;
-            flex-wrap: wrap; /* Allow wrapping on small screens */
-            width: 100%;
-            max-width: 500px; /* Limit max width for info rows */
-            direction: ltr; /* Ensure row direction is LTR for image=numbers */
-            text-align: left; /* Ensure numbers align left within their container */
-            gap: 10px; /* Space between elements in the row */
-        }
-
-        .color-info-row img {
-            width: 80px; /* Larger image size */
-            height: 80px;
-            object-fit: contain;
-            flex-shrink: 0; /* Prevent image from shrinking */
-            border-radius: 8px;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
-        }
-
-        .color-info-row .equal-sign {
-            font-size: 1.8em; /* Larger equals sign */
-            font-weight: 700;
-            flex-shrink: 0;
-        }
-
-        .color-info-row .numbers {
-            font-size: 1.2em; /* Larger numbers */
-            font-weight: 400;
-            direction: ltr; /* Ensure numbers are LTR */
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px 10px; /* Space between numbers */
-            justify-content: flex-start; /* Align numbers to start */
-            flex-grow: 1; /* Allow numbers to take available space */
-        }
-
-        /* Media Queries for smaller adjustments */
-        @media (max-width: 768px) {
+        /* Media Queries for smaller adjustments if needed, though mobile-first is key */
+        @media (max-width: 480px) {
             h1 {
                 font-size: 1.5em;
             }
@@ -297,50 +203,111 @@
             .result-message {
                 font-size: 1.5em;
             }
-            #successContent h3 {
-                font-size: 1.8em;
-            }
-            .color-info-row img {
-                width: 60px;
-                height: 60px;
-            }
-            .color-info-row .equal-sign {
-                font-size: 1.5em;
-            }
-            .color-info-row .numbers {
-                font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-overlay"></div>
+    <div class="container">
+        <h1>כמה נקודות קיימות על פני כדור הארץ מהן ניתן להתקדם קילומטר אחד דרומה ואז קילומטר אחד מזרחה ואז קילומטר אחד צפונה ואז להגיע לאותה נקודה ממנה התחלת?</h1>
+        <p>הקלד את תשובתך בכתב באותיות בעברית</p>
+
+        <input type="text" id="answerInput" placeholder="הקלד כאן...">
+        <button id="submitButton">זו התשובה, אני בטוח</button>
+
+        <div id="resultMessage" class="result-message"></div>
+    </div>
+
+    <div class="star-burst-container" id="starBurstContainer"></div>
+
+    <audio id="wrongSound" src="audio/wrong_sound.mp3" preload="auto"></audio>
+    <audio id="correctSound" src="audio/correct_sound.mp3" preload="auto"></audio>
+
+    <script>
+        const answerInput = document.getElementById('answerInput');
+        const submitButton = document.getElementById('submitButton');
+        const resultMessage = document.getElementById('resultMessage');
+        const starBurstContainer = document.getElementById('starBurstContainer');
+        // הסרנו את lockImage - הוא לא קיים יותר ב-HTML
+        // const lockImage = document.getElementById('lockImage'); 
+        const wrongSound = document.getElementById('wrongSound');
+        const correctSound = document.getElementById('correctSound');
+
+        // Function to create star/glitter particles
+        function createStarBurst() {
+            const numParticles = 30; // Fewer, but more impactful
+            const colors = ['#FFF', '#FFD700', '#FFC0CB']; // White, Gold, Pink for sparkle
+            for (let i = 0; i < numParticles; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('star-particle');
+                // Random position around the center of the screen
+                particle.style.left = `calc(50% + ${(Math.random() - 0.5) * 60}vw)`;
+                particle.style.top = `calc(50% + ${(Math.random() - 0.5) * 60}vh)`;
+                particle.style.width = `${Math.random() * 8 + 4}px`; // Varying sizes
+                particle.style.height = particle.style.width;
+                particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.animationDelay = `${Math.random() * 0.5}s`;
+                starBurstContainer.appendChild(particle);
             }
         }
 
-        @media (max-width: 480px) {
-            .container {
-                padding: 10px;
-                min-height: 60vh; /* Adjust for smaller screens */
+        // Function to clear star burst particles
+        function clearStarBurst() {
+            starBurstContainer.innerHTML = '';
+        }
+
+        // Function to show message and apply effects
+        function showResult(message, isCorrect) {
+            resultMessage.textContent = message;
+            resultMessage.style.display = 'block';
+            resultMessage.classList.remove('error', 'success'); // Clear previous state
+
+            if (isCorrect) {
+                resultMessage.classList.add('success');
+                // הסרנו את השורה ששינתה את תמונת המנעול
+                // lockImage.src = 'images/unlocked_lock.png'; 
+                correctSound.play();
+                createStarBurst();
+                setTimeout(() => {
+                    clearStarBurst();
+                }, 1500); // Clear star burst after its animation
+            } else {
+                resultMessage.classList.add('error');
+                document.body.classList.add('shake');
+                wrongSound.play();
+                if (navigator.vibrate) { // Vibrate if supported
+                    navigator.vibrate(200);
+                }
+                setTimeout(() => {
+                    document.body.classList.remove('shake');
+                }, 500); // Remove shake after animation
             }
-            h1 {
-                font-size: 1.2em;
+
+            // Hide message after a longer duration for correct answers
+            setTimeout(() => {
+                resultMessage.style.display = 'none';
+            }, isCorrect ? 6000 : 3000); // 6 seconds for success, 3 seconds for error
+        }
+
+        submitButton.addEventListener('click', () => {
+            const userAnswer = answerInput.value.trim().toLowerCase();
+            // Normalize for various correct spellings
+            const correctAnswers = ["אינסוף", "אין סוף", "אין-סוף", "אינסוף נקודות", "אין סוף נקודות", "אין-סוף נקודות"];
+
+            if (correctAnswers.includes(userAnswer)) {
+                // שיניתי את נוסח ההודעה שוב, כיוון שהמנעול כבר לא קיים
+                showResult("תשובה נכונה! המנעול נפתח! גזור את האזיקון.", true);
+            } else {
+                showResult("תשובה שגויה", false);
             }
-            p {
-                font-size: 0.8em;
+        });
+
+        // Optional: Allow pressing Enter to submit
+        answerInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                submitButton.click();
             }
-            input[type="text"] {
-                padding: 10px;
-                font-size: 0.9em;
-            }
-            button {
-                padding: 10px 20px;
-                font-size: 1em;
-            }
-            .result-message {
-                font-size: 1.2em;
-            }
-            #successContent h3 {
-                font-size: 1.5em;
-            }
-            .color-info-row {
-                flex-direction: column; /* Stack on very small screens for readability */
-                align-items: center;
-                gap: 5px; /* Reduce gap when stacked */
-                margin-bottom: 10px;
-            }
-            .color-
+        });
+    </script>
+</body>
+</html>
