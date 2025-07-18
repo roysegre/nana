@@ -14,23 +14,31 @@
             --background-overlay-color: rgba(0, 0, 0, 0.6);
         }
 
-        body {
+        html, body {
+            height: 100%;
+            width: 100%;
             margin: 0;
+            padding: 0;
+            /* Changed overflow to allow vertical scroll if content is too tall */
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            overflow-y: auto;   /* Allow vertical scroll */
+        }
+
+        body {
             font-family: 'Rubik', sans-serif;
             display: flex;
-            flex-direction: column; /* Changed to column for bottom message */
-            justify-content: center; /* Adjusted for column layout */
+            flex-direction: column;
+            justify-content: center;
             align-items: center;
             min-height: 100vh;
             color: var(--text-color);
-            overflow: hidden; /* Prevent scroll for animations */
-            position: relative;
             background: url('images/earth_from_space.jpg') no-repeat center center fixed;
             background-size: cover;
+            position: relative;
         }
 
         .background-overlay {
-            position: absolute;
+            position: fixed; /* Changed to fixed to cover entire viewport consistently */
             top: 0;
             left: 0;
             width: 100%;
@@ -44,25 +52,48 @@
             z-index: 2;
             text-align: center;
             padding: 20px;
-            max-width: 90%; /* Adjusted for mobile */
+            max-width: 90%;
             box-sizing: border-box;
-            display: flex;
+            display: flex; /* Ensure it's a flex container from the start */
             flex-direction: column;
             align-items: center;
-            flex-grow: 1; /* Allow container to take available space */
-            justify-content: center; /* Vertically center content within container */
-            width: 100%; /* Ensure it takes full width for centering */
+            justify-content: center; /* Center content vertically initially */
+            flex-grow: 1;
+            width: 100%;
+            transition: opacity 0.5s ease-in-out; /* For fading out */
+            min-height: 50vh; /* Ensure it takes up enough space */
         }
 
-        h1 {
-            font-size: 1.8em; /* Adjusted for mobile */
+        /* Styles for the new image-based header */
+        #headerImage {
+            max-width: 100%; /* Ensure it fits within the container */
+            height: auto; /* Maintain aspect ratio */
+            margin-bottom: 20px;
+            border-radius: 10px; /* Optional: slight rounded corners */
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5); /* Soft glow */
+            /* Ensure the image is a block element to respect margins */
+            display: block; 
+        }
+        
+        /* Adjust for smaller screens specifically for the image */
+        @media (max-width: 480px) {
+            #headerImage {
+                width: 95%; /* Make it a bit wider on small phones */
+                height: auto;
+            }
+        }
+
+
+        h1 { /* This h1 will be replaced by image, but keeping style for other h1s if any */
+            font-size: 1.8em;
             font-weight: 700;
             margin-bottom: 20px;
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+            /* This H1 should technically be gone, but keeping style as a fallback or for other h1s */
         }
 
         p {
-            font-size: 1em; /* Adjusted for mobile */
+            font-size: 1em;
             margin-bottom: 25px;
         }
 
@@ -112,10 +143,9 @@
             transform: translateY(1px);
         }
 
-        /* Result Message - position adjusted to bottom */
         .result-message {
-            position: relative; /* Changed to relative for flow below button */
-            margin-top: 20px; /* Space below button/lock */
+            position: relative;
+            margin-top: 20px;
             font-size: 1.8em; /* Adjusted for bottom placement */
             font-weight: 700;
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
@@ -128,7 +158,7 @@
             color: var(--danger-color); /* Specific color for error */
         }
         .result-message.success {
-             color: var(--primary-color); /* Specific color for success */
+            color: var(--primary-color); /* Specific color for success */
         }
 
 
@@ -184,11 +214,81 @@
             }
         }
 
-        /* Media Queries for smaller adjustments if needed, though mobile-first is key */
-        @media (max-width: 480px) {
-            h1 {
+        /* Success Content Styles */
+        #successContent {
+            display: none; /* Hidden by default */
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: var(--text-color);
+            font-size: 1.5em;
+            font-weight: 700;
+            line-height: 1.6;
+            padding: 20px;
+            box-sizing: border-box;
+            max-width: 90%;
+            width: 100%;
+            flex-direction: column;
+            justify-content: flex-start; /* Align success content to top */
+            align-items: center;
+            flex-grow: 1;
+            min-height: 80vh; /* Adjust for better phone display */
+            opacity: 0; /* Start hidden for fade-in */
+            transition: opacity 0.5s ease-in-out;
+            overflow-y: auto; /* Enable scrolling for success content if it overflows */
+            -webkit-overflow-scrolling: touch;
+        }
+        #successContent h3 {
+            margin-top: 0;
+            margin-bottom: 30px;
+            font-size: 2em; /* Bigger success message */
+        }
+
+        .color-info-row {
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Center rows horizontally */
+            margin-bottom: 15px;
+            flex-wrap: wrap; /* Allow wrapping on small screens */
+            width: 100%;
+            max-width: 500px; /* Limit max width for info rows */
+            direction: ltr; /* Ensure row direction is LTR for image=numbers */
+            text-align: left; /* Ensure numbers align left within their container */
+            gap: 10px; /* Space between elements in the row */
+        }
+
+        .color-info-row img {
+            width: 80px; /* Larger image size */
+            height: 80px;
+            object-fit: contain;
+            flex-shrink: 0; /* Prevent image from shrinking */
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+        }
+
+        .color-info-row .equal-sign {
+            font-size: 1.8em; /* Larger equals sign */
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .color-info-row .numbers {
+            font-size: 1.2em; /* Larger numbers */
+            font-weight: 400;
+            direction: ltr; /* Ensure numbers are LTR */
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px 10px; /* Space between numbers */
+            justify-content: flex-start; /* Align numbers to start */
+            flex-grow: 1; /* Allow numbers to take available space */
+        }
+
+        /* Media Queries for smaller adjustments */
+        @media (max-width: 768px) {
+            /* H1 styles are largely irrelevant now as it's removed */
+            /* h1 {
                 font-size: 1.5em;
-            }
+            } */
             p {
                 font-size: 0.9em;
             }
@@ -203,19 +303,106 @@
             .result-message {
                 font-size: 1.5em;
             }
+            #successContent h3 {
+                font-size: 1.8em;
+            }
+            .color-info-row img {
+                width: 60px;
+                height: 60px;
+            }
+            .color-info-row .equal-sign {
+                font-size: 1.5em;
+            }
+            .color-info-row .numbers {
+                font-size: 1.1em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+                min-height: 60vh; /* Adjust for smaller screens */
+            }
+            /* h1 rules also not applicable anymore */
+            /* h1 {
+                font-size: 1.2em;
+            } */
+            p {
+                font-size: 0.8em;
+            }
+            input[type="text"] {
+                padding: 10px;
+                font-size: 0.9em;
+            }
+            button {
+                padding: 10px 20px;
+                font-size: 1em;
+            }
+            .result-message {
+                font-size: 1.2em;
+            }
+            #successContent h3 {
+                font-size: 1.5em;
+            }
+            .color-info-row {
+                flex-direction: column; /* Stack on very small screens for readability */
+                align-items: center;
+                gap: 5px; /* Reduce gap when stacked */
+                margin-bottom: 10px;
+            }
+            .color-info-row img {
+                width: 50px;
+                height: 50px;
+            }
+            .color-info-row .equal-sign {
+                font-size: 1.2em;
+            }
+            .color-info-row .numbers {
+                font-size: 0.9em;
+                text-align: center; /* Center numbers when stacked */
+                justify-content: center; /* Center numbers when stacked */
+            }
+            #successContent {
+                padding: 10px;
+                min-height: 70vh; /* Ensure enough scrollable area */
+            }
         }
     </style>
 </head>
 <body>
     <div class="background-overlay"></div>
-    <div class="container">
-        <h1>כמה נקודות קיימות על פני כדור הארץ מהן ניתן להתקדם קילומטר אחד דרומה ואז קילומטר אחד מזרחה ואז קילומטר אחד צפונה ואז להגיע לאותה נקודה ממנה התחלת?</h1>
-        <p>הקלד את תשובתך בכתב באותיות בעברית</p>
+    <div class="container" id="mainContainer">
+        <img src="images/na.jpg" alt="חידת כדור הארץ המסתורית" id="headerImage">
+        <p id="subheading">הקלד את תשובתך בכתב באותיות בעברית</p>
 
         <input type="text" id="answerInput" placeholder="הקלד כאן...">
         <button id="submitButton">זו התשובה, אני בטוח</button>
 
         <div id="resultMessage" class="result-message"></div>
+    </div>
+
+    <div id="successContent">
+        <h3 id="successMessageText">תשובה נכונה! כל הכבוד.</h3>
+        <div class="color-info-row">
+            <img src="images/black.jpg" alt="Black Color Icon">
+            <span class="equal-sign">=</span>
+            <span class="numbers">56, 139</span>
+        </div>
+        <div class="color-info-row">
+            <img src="images/white.jpg" alt="White Color Icon">
+            <span class="equal-sign">=</span>
+            <span class="numbers">337, 364, 391</span>
+        </div>
+        <div class="color-info-row">
+            <img src="images/red.jpg" alt="Red Color Icon">
+            <span class="equal-sign">=</span>
+            <span class="numbers">263</span>
+        </div>
+        <div class="color-info-row">
+            <img src="images/blue.jpg" alt="Blue Color Icon">
+            <span class="equal-sign">=</span>
+            <span class="numbers">485, 430</span>
+        </div>
     </div>
 
     <div class="star-burst-container" id="starBurstContainer"></div>
@@ -228,19 +415,22 @@
         const submitButton = document.getElementById('submitButton');
         const resultMessage = document.getElementById('resultMessage');
         const starBurstContainer = document.getElementById('starBurstContainer');
-        // הסרנו את lockImage - הוא לא קיים יותר ב-HTML
-        // const lockImage = document.getElementById('lockImage'); 
         const wrongSound = document.getElementById('wrongSound');
         const correctSound = document.getElementById('correctSound');
+        const mainContainer = document.getElementById('mainContainer'); // The main puzzle container (header image, subheading, input, button)
+        const successContent = document.getElementById('successContent'); // The success message and images container
+        const subheading = document.getElementById('subheading'); // Reference to the subheading P tag
+        const headerImage = document.getElementById('headerImage'); // Reference to the new header image
 
         // Function to create star/glitter particles
         function createStarBurst() {
-            const numParticles = 30; // Fewer, but more impactful
-            const colors = ['#FFF', '#FFD700', '#FFC0CB']; // White, Gold, Pink for sparkle
+            const numParticles = 30;
+            const colors = ['#FFF', '#FFD700', '#FFC0CB'];
+            starBurstContainer.innerHTML = ''; // Clear previous particles
             for (let i = 0; i < numParticles; i++) {
                 const particle = document.createElement('div');
                 particle.classList.add('star-particle');
-                // Random position around the center of the screen
+                // Random position around the center of the screen, slightly wider spread
                 particle.style.left = `calc(50% + ${(Math.random() - 0.5) * 60}vw)`;
                 particle.style.top = `calc(50% + ${(Math.random() - 0.5) * 60}vh)`;
                 particle.style.width = `${Math.random() * 8 + 4}px`; // Varying sizes
@@ -260,45 +450,56 @@
         function showResult(message, isCorrect) {
             resultMessage.textContent = message;
             resultMessage.style.display = 'block';
-            resultMessage.classList.remove('error', 'success'); // Clear previous state
+            resultMessage.classList.remove('error', 'success');
 
             if (isCorrect) {
                 resultMessage.classList.add('success');
-                // הסרנו את השורה ששינתה את תמונת המנעול
-                // lockImage.src = 'images/unlocked_lock.png'; 
-                correctSound.play();
+                correctSound.play().catch(e => console.error("Error playing correct sound:", e));
                 createStarBurst();
+
+                // Hide main puzzle container elements with a fade out
+                mainContainer.style.opacity = 0;
+                mainContainer.style.pointerEvents = 'none'; // Disable interactions
+
+                // After fade out, hide mainContainer and show successContent
                 setTimeout(() => {
-                    clearStarBurst();
-                }, 1500); // Clear star burst after its animation
+                    mainContainer.style.display = 'none'; // Hide the container completely
+                    
+                    // Show success content with a fade-in
+                    successContent.style.display = 'flex'; // Set display to flex before making it visible
+                    setTimeout(() => {
+                        successContent.style.opacity = 1; // Fade in success content
+                    }, 10); // Small delay to ensure display:flex takes effect for transition
+
+                }, 500); // Matches opacity transition duration of mainContainer
+
             } else {
                 resultMessage.classList.add('error');
                 document.body.classList.add('shake');
-                wrongSound.play();
-                if (navigator.vibrate) { // Vibrate if supported
+                wrongSound.play().catch(e => console.error("Error playing wrong sound:", e));
+                if (navigator.vibrate) {
                     navigator.vibrate(200);
                 }
                 setTimeout(() => {
                     document.body.classList.remove('shake');
-                }, 500); // Remove shake after animation
+                }, 500);
+                // Hide error message after a duration
+                setTimeout(() => {
+                    resultMessage.style.display = 'none';
+                }, 3000);
             }
-
-            // Hide message after a longer duration for correct answers
-            setTimeout(() => {
-                resultMessage.style.display = 'none';
-            }, isCorrect ? 6000 : 3000); // 6 seconds for success, 3 seconds for error
         }
 
         submitButton.addEventListener('click', () => {
             const userAnswer = answerInput.value.trim().toLowerCase();
-            // Normalize for various correct spellings
-            const correctAnswers = ["אינסוף", "אין סוף", "אין-סוף", "אינסוף נקודות", "אין סוף נקודות", "אין-סוף נקודות"];
+            // Updated correct answers to include "נא", "נ"א", "נחיתת אונס"
+            const correctAnswers = ["נא", "נ"א", "נחיתת אונס"]; 
 
             if (correctAnswers.includes(userAnswer)) {
-                // שיניתי את נוסח ההודעה שוב, כיוון שהמנעול כבר לא קיים
-                showResult("תשובה נכונה! המנעול נפתח! גזור את האזיקון.", true);
+                // Changed success message as per updated instructions
+                showResult("תשובה נכונה! כל הכבוד.", true); 
             } else {
-                showResult("תשובה שגויה", false);
+                showResult("תשובה שגויה!", false);
             }
         });
 
@@ -307,6 +508,21 @@
             if (e.key === 'Enter') {
                 submitButton.click();
             }
+        });
+
+        // Preload sounds and set initial visibility on DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', () => {
+            wrongSound.load();
+            correctSound.load();
+
+            // Ensure the main puzzle container is visible and interactive on load
+            mainContainer.style.display = 'flex';
+            mainContainer.style.opacity = 1;
+            mainContainer.style.pointerEvents = 'auto';
+
+            // Ensure the success content is hidden on load
+            successContent.style.display = 'none';
+            successContent.style.opacity = 0;
         });
     </script>
 </body>
