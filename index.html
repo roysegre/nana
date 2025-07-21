@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>בד"ח</title>
+    <title>חידת כדור הארץ המסתורית</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap');
 
@@ -61,7 +61,6 @@
             width: 100%;
             transition: opacity 0.5s ease-in-out; /* For fading out */
             min-height: 50vh; /* Ensure it takes up enough space */
-            /* הוספתי וודאות שהאלמנט מוצג תמיד בהתחלה */
             opacity: 1; 
             display: flex;
             pointer-events: auto;
@@ -128,7 +127,7 @@
 
         button:hover {
             background-color: #8c00b3; /* Lighter Purple */
-            transform: translateY(-3pped);
+            transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(106, 13, 173, 0.6);
         }
 
@@ -389,4 +388,119 @@
         </div>
     </div>
 
-    <div class="star
+    <div class="star-burst-container" id="starBurstContainer"></div>
+
+    <audio id="wrongSound" src="audio/wrong_sound.mp3" preload="auto"></audio>
+    <audio id="correctSound" src="audio/correct_sound.mp3" preload="auto"></audio>
+
+    <script>
+        // Getting references to DOM elements
+        const answerInput = document.getElementById('answerInput');
+        const submitButton = document.getElementById('submitButton');
+        const resultMessage = document.getElementById('resultMessage');
+        const starBurstContainer = document.getElementById('starBurstContainer');
+        const wrongSound = document.getElementById('wrongSound');
+        const correctSound = document.getElementById('correctSound');
+        const mainContainer = document.getElementById('mainContainer');
+        const successContent = document.getElementById('successContent');
+        const subheading = document.getElementById('subheading');
+        const headerImage = document.getElementById('headerImage');
+
+        // Function to create star/glitter particles for success animation
+        function createStarBurst() {
+            const numParticles = 30;
+            const colors = ['#FFF', '#FFD700', '#FFC0CB'];
+            starBurstContainer.innerHTML = ''; // Clear previous particles
+            for (let i = 0; i < numParticles; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('star-particle');
+                particle.style.left = `calc(50% + ${(Math.random() - 0.5) * 60}vw)`;
+                particle.style.top = `calc(50% + ${(Math.random() - 0.5) * 60}vh)`;
+                particle.style.width = `${Math.random() * 8 + 4}px`;
+                particle.style.height = particle.style.width;
+                particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.animationDelay = `${Math.random() * 0.5}s`;
+                starBurstContainer.appendChild(particle);
+            }
+        }
+
+        // Function to show result messages and handle UI changes
+        function showResult(message, isCorrect) {
+            resultMessage.textContent = message;
+            resultMessage.style.display = 'block';
+            resultMessage.classList.remove('error', 'success'); // Clear previous classes
+
+            if (isCorrect) {
+                resultMessage.classList.add('success');
+                correctSound.play().catch(e => console.error("Error playing correct sound:", e));
+                createStarBurst();
+
+                // Fade out the main puzzle container
+                mainContainer.style.opacity = 0;
+                mainContainer.style.pointerEvents = 'none'; // Disable interactions on the fading element
+
+                // After fade out, hide mainContainer and show successContent
+                setTimeout(() => {
+                    mainContainer.style.display = 'none'; // Hide completely
+                    
+                    // Show success content with a fade-in effect
+                    successContent.style.display = 'flex'; 
+                    setTimeout(() => {
+                        successContent.style.opacity = 1; 
+                    }, 10); // Small delay for CSS transition to apply
+                }, 500); // This duration should match the CSS transition duration
+            } else {
+                resultMessage.classList.add('error');
+                document.body.classList.add('shake'); // Add shake animation
+                wrongSound.play().catch(e => console.error("Error playing wrong sound:", e));
+                if (navigator.vibrate) { // Vibrate for error on supported devices
+                    navigator.vibrate(200);
+                }
+                setTimeout(() => {
+                    document.body.classList.remove('shake'); // Remove shake after animation
+                }, 500);
+                // Hide error message after a short duration
+                setTimeout(() => {
+                    resultMessage.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        // Event listener for the submit button click
+        submitButton.addEventListener('click', () => {
+            const userAnswer = answerInput.value.trim().toLowerCase();
+            // Defined correct answers, all converted to lowercase for case-insensitive comparison
+            const correctAnswers = ["נא", "נ''א", "נחיתת אונס"].map(ans => ans.toLowerCase()); 
+
+            if (correctAnswers.includes(userAnswer)) {
+                showResult("תשובה נכונה! כל הכבוד.", true); 
+            } else {
+                showResult("תשובה שגויה!", false);
+            }
+        });
+
+        // Allow pressing Enter in the input field to submit the answer
+        answerInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                submitButton.click(); // Simulate button click
+            }
+        });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Preload sounds for smoother playback
+            wrongSound.load();
+            correctSound.load();
+
+            // Ensure success content is hidden initially
+            successContent.style.display = 'none';
+            successContent.style.opacity = 0;
+
+            // Optional: Log to console to confirm script is running and elements are found
+            console.log("DOM content loaded. Elements initialized.");
+            console.log("Answer Input:", answerInput);
+            console.log("Submit Button:", submitButton);
+        });
+    </script>
+</body>
+</html>
