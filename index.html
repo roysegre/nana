@@ -61,6 +61,10 @@
             width: 100%;
             transition: opacity 0.5s ease-in-out; /* For fading out */
             min-height: 50vh; /* Ensure it takes up enough space */
+            /* הוספתי וודאות שהאלמנט מוצג תמיד בהתחלה */
+            opacity: 1; 
+            display: flex;
+            pointer-events: auto;
         }
 
         /* Styles for the new image-based header */
@@ -80,14 +84,6 @@
                 height: auto;
             }
         }
-
-        /* H1 styling is now irrelevant as it's replaced by an image, but keeping for reference if needed elsewhere */
-        /* h1 { 
-            font-size: 1.8em;
-            font-weight: 700;
-            margin-bottom: 20px;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
-        } */
 
         p {
             font-size: 1em;
@@ -132,7 +128,7 @@
 
         button:hover {
             background-color: #8c00b3; /* Lighter Purple */
-            transform: translateY(-3px);
+            transform: translateY(-3pped);
             box-shadow: 0 6px 20px rgba(106, 13, 173, 0.6);
         }
 
@@ -240,4 +236,157 @@
             font-size: 2em; /* Bigger success message */
         }
 
-        .color-info-row
+        .color-info-row {
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Center rows horizontally */
+            margin-bottom: 15px;
+            flex-wrap: wrap; /* Allow wrapping on small screens */
+            width: 100%;
+            max-width: 500px; /* Limit max width for info rows */
+            direction: ltr; /* Ensure row direction is LTR for image=numbers */
+            text-align: left; /* Ensure numbers align left within their container */
+            gap: 10px; /* Space between elements in the row */
+        }
+
+        .color-info-row img {
+            width: 80px; /* Larger image size */
+            height: 80px;
+            object-fit: contain;
+            flex-shrink: 0; /* Prevent image from shrinking */
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+        }
+
+        .color-info-row .equal-sign {
+            font-size: 1.8em; /* Larger equals sign */
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .color-info-row .numbers {
+            font-size: 1.2em; /* Larger numbers */
+            font-weight: 400;
+            direction: ltr; /* Ensure numbers are LTR */
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px 10px; /* Space between numbers */
+            justify-content: flex-start; /* Align numbers to start */
+            flex-grow: 1; /* Allow numbers to take available space */
+        }
+
+        /* Media Queries for smaller adjustments */
+        @media (max-width: 768px) {
+            p {
+                font-size: 0.9em;
+            }
+            input[type="text"] {
+                padding: 12px;
+                font-size: 1em;
+            }
+            button {
+                padding: 12px 25px;
+                font-size: 1.1em;
+            }
+            .result-message {
+                font-size: 1.5em;
+            }
+            #successContent h3 {
+                font-size: 1.8em;
+            }
+            .color-info-row img {
+                width: 60px;
+                height: 60px;
+            }
+            .color-info-row .equal-sign {
+                font-size: 1.5em;
+            }
+            .color-info-row .numbers {
+                font-size: 1.1em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+                min-height: 60vh; /* Adjust for smaller screens */
+            }
+            p {
+                font-size: 0.8em;
+            }
+            input[type="text"] {
+                padding: 10px;
+                font-size: 0.9em;
+            }
+            button {
+                padding: 10px 20px;
+                font-size: 1em;
+            }
+            .result-message {
+                font-size: 1.2em;
+            }
+            #successContent h3 {
+                font-size: 1.5em;
+            }
+            .color-info-row {
+                flex-direction: column; /* Stack on very small screens for readability */
+                align-items: center;
+                gap: 5px; /* Reduce gap when stacked */
+                margin-bottom: 10px;
+            }
+            .color-info-row img {
+                width: 50px;
+                height: 50px;
+            }
+            .color-info-row .equal-sign {
+                font-size: 1.2em;
+            }
+            .color-info-row .numbers {
+                font-size: 0.9em;
+                text-align: center; /* Center numbers when stacked */
+                justify-content: center; /* Center numbers when stacked */
+            }
+            #successContent {
+                padding: 10px;
+                min-height: 70vh; /* Ensure enough scrollable area */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-overlay"></div>
+    <div class="container" id="mainContainer">
+        <img src="images/na.jpg" alt="חידת כדור הארץ המסתורית" id="headerImage">
+        <p id="subheading">הקלד את תשובתך בכתב באותיות בעברית</p>
+
+        <input type="text" id="answerInput" placeholder="הקלד כאן...">
+        <button id="submitButton">זו התשובה, אני בטוח</button>
+
+        <div id="resultMessage" class="result-message"></div>
+    </div>
+
+    <div id="successContent">
+        <h3 id="successMessageText">תשובה נכונה! כל הכבוד.</h3>
+        <div class="color-info-row">
+            <img src="images/black.jpg" alt="Black Color Icon">
+            <span class="equal-sign">=</span>
+            <span class="numbers">56, 139</span>
+        </div>
+        <div class="color-info-row">
+            <img src="images/white.jpg" alt="White Color Icon">
+            <span class="equal-sign">=</span>
+            <span class="numbers">337, 364, 391</span>
+        </div>
+        <div class="color-info-row">
+            <img src="images/red.jpg" alt="Red Color Icon">
+            <span class="equal-sign">=</span>
+            <span class="numbers">263</span>
+        </div>
+        <div class="color-info-row">
+            <img src="images/blue.jpg" alt="Blue Color Icon">
+            <span class="equal-sign">=</span>
+            <span class="numbers">485, 430</span>
+        </div>
+    </div>
+
+    <div class="star
